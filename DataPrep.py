@@ -32,7 +32,6 @@ class DataPrep:
         Third, encode categorical data using one-hot/ordinal encoding
         :return: transformed data
         """
-
         # separating the output
         churn_output = self.data["Churn"]
         self.data.drop("Churn", axis=1, inplace=True)
