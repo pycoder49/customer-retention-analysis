@@ -1,5 +1,12 @@
 from DataPrep import DataPrep
+from models import LinearRegression
+from models import LogisticRegression
+from models import KNearestNeighbor
+from models import accuracy
+
+import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import torch
 
 """
@@ -59,3 +66,26 @@ x_train, y_train, x_test, y_test = dp.get_datasets()
 """
 Training the models
 """
+# Linear Regression Model
+linear_model = LinearRegression()
+
+losses = linear_model.fit(x_train, y_train)
+continuous_predictions = linear_model.predict(x_test)
+classified_predictions = linear_model.predict_class(x_test)
+print(f"Accuracy of Linear Regression: {accuracy(classified_predictions, y_test): .2f}%")
+
+# plotting the losses over epochs
+# x_axis = np.arange(len(losses))
+# plt.plot(x_axis, losses, label="Training Loss")
+# plt.xlabel("Epochs")
+# plt.ylabel("Loss")
+# plt.title("Loss Over Time")
+# plt.legend()
+# plt.show()
+linear_model.visualize_decision_boundary(x_test, y_test)
+
+
+# Logistic Regression Model
+
+
+# K-Nearest Neighbors Model
