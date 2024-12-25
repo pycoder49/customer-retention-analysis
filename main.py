@@ -78,6 +78,11 @@ log_predictions = log_model.predict(x_test)
 print(f"Accuracy of Logistic Regression: {models.accuracy(log_predictions, y_test): .2f}%")
 
 # K-Nearest Neighbors Model
+knn_model = models.KNearestNeighbor()
+
+knn_model.fit(x_train, y_train)
+knn_predictions = knn_model.predict(x_test)
+print(f"Accuracy of KNN model: {models.accuracy(knn_predictions, y_test): .2f}%")
 
 
 # plotting the errors for all three

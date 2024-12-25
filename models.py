@@ -130,5 +130,33 @@ class LogisticRegression:
 
 
 class KNearestNeighbor:
-    pass
+    def __init__(self):
+        self.k = 3
+
+        self.X = None
+        self.y = None
+
+    def fit(self, X, y):
+        self.X = torch.from_numpy(X.values).float()
+        self.y = torch.from_numpy(y.values).float().view(-1, 1)
+
+    def predict(self, X):
+        X = torch.from_numpy(X.values).float()
+        y_pred = []
+        for i in range(len(X)):
+            # get a list of indices of nearest neighbors using euclidean distance
+            distance = torch.sqrt(torch.sum((self.X - X[i]) ** 2, dim=1))
+            nearest_neighbors = torch.argsort(distance)[:self.k]
+
+            # get the classifications for the nearest indices
+            nearest_labels = self.y[nearest_neighbors].squeeze()    # squeeze removes dimensions of 1: [k, 1] -> [k]
+
+            # get the mode of the k classifications
+            most_common = torch.mode(nearest_labels).values.item()
+
+            # append it to prediction list
+            y_pred.append(most_common)
+
+        return torch.tensor(y_pred).view(-1, 1)
+
 
