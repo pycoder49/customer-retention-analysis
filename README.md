@@ -14,9 +14,9 @@ Respective Accuracies for the models:
 
 Ideas to get a better accuracy:
 1) Apply both Ridge and Lasso Regularization
-2) Hyper parameter tuning for:
-  * Lambda
-  * Alpha
-  * Learning rate
+2) Hyperparameter tuning for:
+    * Lambda
+    * Alpha
+    * Learning rate
 
 Open to other suggestions!
