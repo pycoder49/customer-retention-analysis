@@ -1,13 +1,9 @@
 from DataPrep import DataPrep
-from models import LinearRegression
-from models import LogisticRegression
-from models import KNearestNeighbor
-from models import accuracy
+import models
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import torch
 
 """
 Project Pipeline:
@@ -67,25 +63,30 @@ x_train, y_train, x_test, y_test = dp.get_datasets()
 Training the models
 """
 # Linear Regression Model
-linear_model = LinearRegression()
+linear_model = models.LinearRegression()
 
-losses = linear_model.fit(x_train, y_train)
+linear_losses = linear_model.fit(x_train, y_train)
 continuous_predictions = linear_model.predict(x_test)
-classified_predictions = linear_model.predict_class(x_test)
-print(f"Accuracy of Linear Regression: {accuracy(classified_predictions, y_test): .2f}%")
-
-# plotting the losses over epochs
-# x_axis = np.arange(len(losses))
-# plt.plot(x_axis, losses, label="Training Loss")
-# plt.xlabel("Epochs")
-# plt.ylabel("Loss")
-# plt.title("Loss Over Time")
-# plt.legend()
-# plt.show()
-linear_model.visualize_decision_boundary(x_test, y_test)
-
+linear_predictions = linear_model.predict_class(x_test)
+print(f"Accuracy of Linear Regression: {models.accuracy(linear_predictions, y_test): .2f}%")
 
 # Logistic Regression Model
+log_model = models.LogisticRegression()
 
+log_losses = log_model.fit(x_train, y_train)
+log_predictions = log_model.predict(x_test)
+print(f"Accuracy of Logistic Regression: {models.accuracy(log_predictions, y_test): .2f}%")
 
 # K-Nearest Neighbors Model
+
+
+# plotting the errors for all three
+x_axis_linear = np.arange(len(linear_losses))
+x_axis_logistic = np.arange(len(log_losses))
+plt.plot(x_axis_linear, linear_losses, label="Linear Regression Loss")
+plt.plot(x_axis_logistic, log_losses, label="Logistic Regression Loss")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.title("Loss Over Time")
+plt.legend()
+plt.show()

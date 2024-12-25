@@ -66,7 +66,67 @@ class LinearRegression:
 
 
 class LogisticRegression:
-    pass
+    def __init__(self):
+        self.lr = 0.01
+        self.lmbda = 0.001
+        self.w = None
+        self.b = None
+
+        self.X = None
+        self.y = None
+
+    def fit(self, X, y):
+        # initialize weights, bias, and tensors
+        self.X = torch.from_numpy(X.values).float()
+        self.y = torch.from_numpy(y.values).float().view(-1, 1)
+
+        num_features = self.X.shape[1]
+        self.w = torch.zeros(num_features, 1)
+        self.b = torch.zeros(1)
+
+        epochs = 1000
+        losses = []
+        for epoch in range(epochs):
+            # compute sigmoid activation
+            y_pred = (1 + torch.exp(- self._logit())) ** -1
+
+            # compute loss
+            log_loss = self._compute_loss()
+            losses.append(log_loss.item())
+
+            # apply grad descent
+            self._log_grad_descent()
+
+        return losses
+
+    def predict(self, X):
+        X = torch.from_numpy(X.values).float()
+        logit = torch.matmul(X, self.w) + self.b
+        predictions = 1 / (1 + torch.exp(- logit))
+        return torch.where(predictions > 0.5, 1, 0)
+
+    def _log_grad_descent(self):
+        y_pred = 1 / (1 + torch.exp(- self._logit()))
+        num_samples = self.X.shape[0]
+
+        dw = (1/num_samples) * torch.matmul(self.X.T, y_pred - self.y)
+        db = torch.mean(y_pred - self.y)
+
+        dw += 0.1 * self.w        # L2 Regularization
+
+        self.w -= self.lr * dw
+        self.b -= self.lr * db
+
+    def _compute_loss(self):
+        sigmoid = 1 / (1 + torch.exp(- self._logit()))
+        first_half = self.y * torch.log(sigmoid + 1e-8)
+        second_half = (1 - self.y) * torch.log(1 + sigmoid + 1e-8)
+        bce_loss = - torch.mean(first_half + second_half)
+
+        return bce_loss
+
+    def _logit(self):
+        return torch.matmul(self.X, self.w) + self.b
 
 
 class KNearestNeighbor:
